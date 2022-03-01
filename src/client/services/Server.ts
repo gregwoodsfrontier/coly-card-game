@@ -1,6 +1,7 @@
 import { Client, Room } from "colyseus.js";
 import Phaser from "phaser";
 import { ITicTacToeState } from "../../types/ITicTacToeState";
+import { Message } from "../../types/messages";
 
 export default class Server
 {
@@ -28,4 +29,14 @@ export default class Server
 	{
 		this.events.once('once-state-changed', cb, context)
 	}
+
+    makeSelection(idx: number)
+    {
+        if(!this.room)
+        {
+            throw new Error('the room does not exist')
+        }
+
+        this.room.send(Message.PlayerSelection)
+    }
 }

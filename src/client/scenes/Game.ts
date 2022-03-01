@@ -29,6 +29,28 @@ export default class Game extends Phaser.Scene
 
     private createBoard(state: ITicTacToeState)
     {
-        console.log(state)
+        const { width, height } = this.scale
+        const rWidth = 128
+        const rHeight = 128
+        const gap = 15
+        let x = width * 0.5 - rWidth
+        let y = height * 0.5 - rHeight
+        
+
+        state.board.forEach((cellState, idx) => {
+            const cell = this.add.rectangle(x, y, rWidth, rHeight, 0xffffff)
+            .setInteractive()
+            .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+                this.server?.makeSelection(idx)
+            })
+
+            x += rWidth + gap
+
+            if((idx + 1) % 3 === 0)
+            {
+                y += rHeight + gap
+                x = width * 0.5 - rWidth
+            }
+        })
     }
 }
