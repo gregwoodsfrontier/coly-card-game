@@ -1,4 +1,5 @@
 import { Client, Room } from "colyseus.js";
+import { Schema } from "@colyseus/schema"
 import Phaser from "phaser";
 import { ITicTacToeState } from "../../types/ITicTacToeState";
 import { Message } from "../../types/messages";
@@ -7,7 +8,7 @@ export default class Server
 {
     private client: Client
     private events: Phaser.Events.EventEmitter
-    private room?: Room<ITicTacToeState>
+    private room?: Room<ITicTacToeState & Schema>
 
     constructor()
     {
@@ -17,12 +18,27 @@ export default class Server
 
     async join()
     {
-        this.room = await this.client.joinOrCreate<ITicTacToeState>('tic-tac-toe')
+        this.room = await this.client.joinOrCreate<ITicTacToeState & Schema>('tic-tac-toe')
                 
         this.room.onStateChange.once(state => {
-            console.log('this room on state changed')
             this.events.emit('once-state-changed', state)
         })
+
+        // checks for state changes and emit events
+        this.room.state.onChange = (changes) => {
+            changes.forEach(change => {
+                const { field, value } = change
+
+                switch(field)
+                {
+                    case 'board':
+                        this.events.emit('board-changed', value)
+                        break
+                }
+            })
+        }
+
+        
     }
 
     onceStateChanged(cb: (state: ITicTacToeState) => void, context?: any)
@@ -37,6 +53,12 @@ export default class Server
             throw new Error('the room does not exist')
         }
 
-        this.room.send(Message.PlayerSelection)
+        this.room.send(Message.PlayerSelection, { index: idx })
+    }
+
+    // listen for board change or game state change
+    onBoardChanged(cb: (board: number[]) => void, context?: any)
+    {
+        this.events.on('board-changed', cb, context)
     }
 }
