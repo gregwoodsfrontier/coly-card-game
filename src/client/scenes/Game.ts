@@ -63,19 +63,28 @@ export default class Game extends Phaser.Scene
         this.server?.onBoardChanged(this.handleBoardChanged, this)
     }
 
-    private handleBoardChanged(board: Cell[])
-    {
-        console.log('function called')
-        for (let i = 0; i < board.length; ++i)
-        {
-            const cell = this.cells[i]
+    private handleBoardChanged(newValue: Cell, idx: number)
+	{
+		const cell = this.cells[idx]
+		if (cell.value !== newValue)
+		{
+			switch (newValue)
+			{
+				case Cell.X:
+				{
+					this.add.star(cell.display.x, cell.display.y, 4, 4, 60, 0xff0000)
+						.setAngle(45)
+					break
+				}
 
-            // check if there is any difference with data and render
-            if(cell.value !== board[i])
-            {
-                this.add.star(cell.display.x, cell.display.y, 4, 4, 64, 0xff0000)
-                .setAngle(45)
-            }
-        }
-    }
+				case Cell.O:
+				{
+					this.add.circle(cell.display.x, cell.display.y, 50, 0x0000ff)
+					break
+				}
+			}
+
+			cell.value = newValue
+		}
+	}
 }

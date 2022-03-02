@@ -8,7 +8,7 @@ export default class Server
 {
     private client: Client
     private events: Phaser.Events.EventEmitter
-    private room?: Room<ITicTacToeState & Schema>
+    private room?: Room<ITicTacToeState>
 
     constructor()
     {
@@ -18,7 +18,7 @@ export default class Server
 
     async join()
     {
-        this.room = await this.client.joinOrCreate<ITicTacToeState & Schema>('tic-tac-toe')
+        this.room = await this.client.joinOrCreate<ITicTacToeState>('tic-tac-toe')
                 
         this.room.onStateChange.once(state => {
             this.events.emit('once-state-changed', state)
@@ -27,18 +27,14 @@ export default class Server
         // checks for state changes and emit events
         this.room.state.onChange = (changes) => {
             changes.forEach(change => {
-                const { field, value } = change
-
-                switch(field)
-                {
-                    case 'board':
-                        this.events.emit('board-changed', value)
-                        break
-                }
+                // const { field, value } = change
+                console.log(change)
             })
         }
 
-        
+        this.room.state.board.onChange = (item, idx) => {
+			this.events.emit('board-changed', item, idx)
+		}
     }
 
     onceStateChanged(cb: (state: ITicTacToeState) => void, context?: any)
@@ -57,8 +53,8 @@ export default class Server
     }
 
     // listen for board change or game state change
-    onBoardChanged(cb: (board: number[]) => void, context?: any)
-    {
-        this.events.on('board-changed', cb, context)
-    }
+    onBoardChanged(cb: (cell: number, index: number) => void, context?: any)
+	{
+		this.events.on('board-changed', cb, context)
+	}
 }
