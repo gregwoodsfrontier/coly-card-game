@@ -1,4 +1,4 @@
-import { Room } from "colyseus";
+import { Client, Room } from "colyseus";
 import { Dispatcher } from "@colyseus/command";
 import { Message } from "../types/messages";
 import TicTacToeState from "./TicTacToeState";
@@ -20,6 +20,13 @@ export default class TicTacToe extends Room {
                 index: message.index
             })
         })
+    }
+
+    onJoin(client: Client)
+    {
+        const idx = this.clients.findIndex(c => c.sessionId === client.sessionId)
+        client.send(Message.PlayerIndex, { playerIndex: idx})
+    
     }
 
     /* // Authorize client based on provided options before WebSocket handshake is complete

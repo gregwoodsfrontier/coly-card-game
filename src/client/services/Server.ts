@@ -9,6 +9,12 @@ export default class Server
     private client: Client
     private events: Phaser.Events.EventEmitter
     private room?: Room<ITicTacToeState>
+    private _playerIndex = -1
+
+    get playerIndex()
+    {
+        return this._playerIndex
+    }
 
     constructor()
     {
@@ -19,7 +25,11 @@ export default class Server
     async join()
     {
         this.room = await this.client.joinOrCreate<ITicTacToeState>('tic-tac-toe')
-                
+        
+        this.room.onMessage(Message.PlayerIndex, (message: { playerIndex: number}) => {
+            this._playerIndex = message.playerIndex
+        })
+
         this.room.onStateChange.once(state => {
             this.events.emit('once-state-changed', state)
         })
@@ -27,12 +37,25 @@ export default class Server
         // checks for state changes and emit events
         this.room.state.onChange = (changes) => {
             changes.forEach(change => {
-                // const { field, value } = change
-                console.log(change)
+                // console.dir(change)
+                const { field, value } = change
+                console.log(field)
+                
+                switch (field) {
+                    /* case 'board' :
+                        this.events.emit('board-changed', value);
+                        break; */
+                    
+                    case 'activePlayer':
+                        this.events.emit('player-turn-changed', value);
+                        break;
+                }
             })
         }
 
         this.room.state.board.onChange = (item, idx) => {
+            console.log({item});
+            console.log({idx})
 			this.events.emit('board-changed', item, idx)
 		}
     }
@@ -49,6 +72,12 @@ export default class Server
             throw new Error('the room does not exist')
         }
 
+        if(this._playerIndex !== this.room.state.activePlayer)
+        {
+            console.warn('Not Your Turn. Please wait...')
+            return
+        }
+
         this.room.send(Message.PlayerSelection, { index: idx })
     }
 
@@ -57,4 +86,9 @@ export default class Server
 	{
 		this.events.on('board-changed', cb, context)
 	}
+
+    onPlayerChanged(cb: (playerNumber: number) => void, context?: any)
+    {
+        this.events.on('player-turn-changed', cb, context)
+    }
 }

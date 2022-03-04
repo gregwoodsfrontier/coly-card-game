@@ -16,13 +16,13 @@ export enum GameState
 
 export interface ITicTacToeState extends Schema
 {
-	gameState: GameState
+	// gameState: GameState
 	
 	board: ArraySchema<Cell>
 
 	activePlayer: number
 
-	winningPlayer: number
+	// winningPlayer: number
 }
 
 export default ITicTacToeState

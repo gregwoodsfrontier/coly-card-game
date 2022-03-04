@@ -46,6 +46,22 @@ export default class Game extends Phaser.Scene
                 this.server?.makeSelection(idx)
             })
 
+            switch (cellState)
+			{
+				case Cell.X:
+				{
+					this.add.star(cell.x, cell.y, 4, 4, 60, 0xff0000)
+						.setAngle(45)
+					break
+				}
+
+				case Cell.O:
+				{
+					this.add.circle(cell.x, cell.y, 50, 0x0000ff)
+					break
+				}
+			}
+
             this.cells.push({
                 display: cell,
                 value: cellState
@@ -61,10 +77,12 @@ export default class Game extends Phaser.Scene
         })
 
         this.server?.onBoardChanged(this.handleBoardChanged, this)
+        this.server?.onPlayerChanged(this.handlePlayerTurnChanged, this)
     }
 
     private handleBoardChanged(newValue: Cell, idx: number)
 	{
+        console.log('handle board change')
 		const cell = this.cells[idx]
 		if (cell.value !== newValue)
 		{
@@ -87,4 +105,9 @@ export default class Game extends Phaser.Scene
 			cell.value = newValue
 		}
 	}
+
+    private handlePlayerTurnChanged(playerIndex: number)
+    {
+        console.log('player turn changed ', playerIndex)
+    }
 }

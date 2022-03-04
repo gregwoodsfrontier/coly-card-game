@@ -1,6 +1,5 @@
 import { Command } from '@colyseus/command'
-import { Client } from 'colyseus'
-import { Cell, ITicTacToeState } from '../../types/ITicTacToeState'
+import { ITicTacToeState } from '../../types/ITicTacToeState'
 
 export default class NextTurnCommand extends Command<ITicTacToeState>
 {
@@ -8,7 +7,13 @@ export default class NextTurnCommand extends Command<ITicTacToeState>
     {
         const activePlayer = this.room.state.activePlayer
 
-        this.room.state.activePlayer = this.room.state.activePlayer === 0 ? 1 : 0
-        
+		if (activePlayer === 0)
+		{
+			this.room.state.activePlayer = 1
+		}
+		else
+		{
+			this.room.state.activePlayer = 0
+		}
     }
 }
