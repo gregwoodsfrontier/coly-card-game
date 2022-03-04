@@ -1,6 +1,7 @@
 import { Command } from '@colyseus/command'
 import { Client } from 'colyseus'
 import { Cell, ITicTacToeState } from '../../types/ITicTacToeState'
+import NextTurnCommand from './NextTurnCommand'
 
 type Payload = {
     client: Client,
@@ -19,5 +20,10 @@ export default class PlayerSelectionCommand extends Command<ITicTacToeState, Pay
 
         // coly will get the changes and send that to client
         this.room.state.board[index] = cellValue
+
+        // give to next player
+        return [
+            new NextTurnCommand()
+        ]
     }
 }
