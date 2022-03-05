@@ -49,6 +49,10 @@ export default class Server
                     case 'activePlayer':
                         this.events.emit('player-turn-changed', value);
                         break;
+                    
+                    case 'winningPlayer':
+                        this.events.emit('player-win', value);
+                        break;
                 }
             })
         }
@@ -91,4 +95,9 @@ export default class Server
     {
         this.events.on('player-turn-changed', cb, context)
     }
+
+    onPlayerWon(cb: (playerIndex: number) => void, context?: any)
+	{
+		this.events.on('player-win', cb, context)
+	}
 }
