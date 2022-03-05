@@ -10,7 +10,7 @@ export default class TicTacToe extends Room {
     // When room is initialized
     onCreate()
     {
-        console.log('room created')
+        this.maxClients = 2;
         this.setState(new TicTacToeState())
 
         // split into diff commands for shared logic
