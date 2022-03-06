@@ -1,7 +1,7 @@
 import { Client, Room } from "colyseus.js";
 import { Schema } from "@colyseus/schema"
 import Phaser from "phaser";
-import { ITicTacToeState } from "../../types/ITicTacToeState";
+import { Cell, ITicTacToeState } from "../../types/ITicTacToeState";
 import { Message } from "../../types/messages";
 
 export default class Server
@@ -57,8 +57,6 @@ export default class Server
         }
 
         this.room.state.board.onChange = (item, idx) => {
-            console.log({item});
-            console.log({idx})
 			this.events.emit('board-changed', item, idx)
 		}
     }
@@ -78,6 +76,13 @@ export default class Server
         if(this._playerIndex !== this.room.state.activePlayer)
         {
             console.warn('Not Your Turn. Please wait...')
+            return
+        }
+
+        // check if the cell is selected
+        if(this.room.state.board[idx] !== Cell.Empty)
+        {
+            console.warn('This cell is chosen. Choose another...')
             return
         }
 
