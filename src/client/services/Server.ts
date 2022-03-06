@@ -51,9 +51,6 @@ export default class Server
                 const { field, value } = change
                 
                 switch (field) {
-                    /* case 'board' :
-                        this.events.emit('board-changed', value);
-                        break; */
                     
                     case 'activePlayer':
                         this.events.emit(EventKeys.PlayerTurnChanged, value);

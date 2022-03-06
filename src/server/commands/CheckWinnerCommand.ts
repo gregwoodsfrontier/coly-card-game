@@ -1,5 +1,4 @@
-import { Client } from "colyseus";
-import { Cell } from "../../types/ITicTacToeState";
+import { Cell, GameState } from "../../types/ITicTacToeState";
 import { Command } from "@colyseus/command";
 import ITicTacToeState from "../../types/ITicTacToeState";
 import NextTurnCommand from "./NextTurnCommand";
@@ -68,6 +67,7 @@ export default class CheckWinnerCommand extends Command<ITicTacToeState>
         {
             // set winnplayer
             this.state.winningPlayer = this.state.activePlayer
+			this.state.gameState = GameState.Finished
 			return
         }
         
