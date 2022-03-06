@@ -32,6 +32,7 @@ export default class Bootstrap extends Phaser.Scene
     }
 
     private handleGameOver = (data: IGameOverSceneData) => {
+        console.log(data)
 		this.server.leave()
 		this.scene.stop(SceneKeys.Game)
 
