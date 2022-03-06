@@ -16,6 +16,16 @@ export default class Server
         return this._playerIndex
     }
 
+    get gameState()
+    {
+        if(!this.room)
+        {
+            return GameState.WaitingForPlayers
+        }
+
+        return this.room?.state.gameState
+    }
+
     constructor()
     {
         this.client = new Client('ws://localhost:2567')
@@ -75,7 +85,13 @@ export default class Server
     {
         if(!this.room)
         {
-            throw new Error('the room does not exist')
+            throw new Error('This room does not exist')
+        }
+
+        if(this.room.state.gameState !== GameState.Playing)
+        {
+            console.warn('This room is not ready yet ...')
+            return
         }
 
         if(this._playerIndex !== this.room.state.activePlayer)

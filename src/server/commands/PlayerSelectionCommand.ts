@@ -1,6 +1,6 @@
 import { Command } from '@colyseus/command'
 import { Client } from 'colyseus'
-import { Cell, ITicTacToeState } from '../../types/ITicTacToeState'
+import { Cell, GameState, ITicTacToeState } from '../../types/ITicTacToeState'
 import CheckWinnerCommand from './CheckWinnerCommand'
 // import NextTurnCommand from './NextTurnCommand'
 
@@ -14,6 +14,11 @@ export default class PlayerSelectionCommand extends Command<ITicTacToeState, Pay
     execute(data: Payload)
     {
         const { client, index } = data
+
+        if(this.room.state.gameState !== GameState.Playing)
+        {
+            return
+        }
         
         const clientIndex = this.room.clients.findIndex(c => c.id === client.id)
 

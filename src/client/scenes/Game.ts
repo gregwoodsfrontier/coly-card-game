@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { IGameOverSceneData, IGameSceneData, SceneKeys } from '../../types/scenes'
-import { Cell, ITicTacToeState } from "../../types/ITicTacToeState";
+import { Cell, GameState, ITicTacToeState } from "../../types/ITicTacToeState";
 import type Server from "../services/Server";
 
 export default class Game extends Phaser.Scene 
@@ -8,6 +8,7 @@ export default class Game extends Phaser.Scene
     private server?: Server
     private onGameOver?: (data: IGameOverSceneData) => void
     private cells: {display: Phaser.GameObjects.Rectangle, value: Cell}[] = []
+    private gameStateText?: Phaser.GameObjects.Text
 
     constructor()
     {
@@ -79,9 +80,27 @@ export default class Game extends Phaser.Scene
             }
         })
 
+        if(this.server?.gameState === GameState.WaitingForPlayers)
+        {
+            this.gameStateText = this.add.text(width*0.5, 50, 'Waiting for opponents...', {
+                fontSize: '24px'
+            })
+            .setOrigin(0.5)
+        }
+
         this.server?.onBoardChanged(this.handleBoardChanged, this)
         this.server?.onPlayerChanged(this.handlePlayerTurnChanged, this)
         this.server?.onPlayerWon(this.handlePlayerWon, this)
+        this.server?.onGameStateChange(this.handleGameStateChange, this)
+    }
+
+    private handleGameStateChange(state: GameState)
+    {
+        if(state === GameState.Playing && this.gameStateText)
+        {
+            this.gameStateText.destroy()
+            this.gameStateText = undefined
+        }
     }
 
     private handlePlayerWon(playerIndex: number)

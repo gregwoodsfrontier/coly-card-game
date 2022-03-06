@@ -23,6 +23,8 @@ export interface ITicTacToeState extends Schema
 	activePlayer: number
 
 	winningPlayer: number
+
+	gameState: number
 }
 
 export default ITicTacToeState
