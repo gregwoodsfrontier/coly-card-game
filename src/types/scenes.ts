@@ -11,3 +11,10 @@ export interface IGameSceneData
 	server: Server
 	onGameOver: (data: IGameOverSceneData) => void
 }
+
+export enum SceneKeys
+{
+	Game = "game",
+	GameOver = "gameover",
+	BootStrap = "bootstrap"
+}

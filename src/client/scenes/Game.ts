@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { IGameOverSceneData, IGameSceneData } from '../../types/scenes'
+import { IGameOverSceneData, IGameSceneData, SceneKeys } from '../../types/scenes'
 import { Cell, ITicTacToeState } from "../../types/ITicTacToeState";
 import type Server from "../services/Server";
 
@@ -11,7 +11,7 @@ export default class Game extends Phaser.Scene
 
     constructor()
     {
-        super('game')
+        super(SceneKeys.Game)
     }
 
     async create(data: IGameSceneData)

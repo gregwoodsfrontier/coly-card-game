@@ -39,7 +39,6 @@ export default class Server
             changes.forEach(change => {
                 // console.dir(change)
                 const { field, value } = change
-                console.log(field)
                 
                 switch (field) {
                     /* case 'board' :
@@ -99,5 +98,11 @@ export default class Server
     onPlayerWon(cb: (playerIndex: number) => void, context?: any)
 	{
 		this.events.on('player-win', cb, context)
+	}
+
+    leave()
+	{
+		this.room?.leave()
+		this.events.removeAllListeners()
 	}
 }
