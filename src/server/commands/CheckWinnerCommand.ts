@@ -68,6 +68,7 @@ export default class CheckWinnerCommand extends Command<ITicTacToeState>
         {
             // set winnplayer
             this.state.winningPlayer = this.state.activePlayer
+			return
         }
         
         return [
