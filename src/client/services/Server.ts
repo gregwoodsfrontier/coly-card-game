@@ -1,7 +1,7 @@
 import { Client, Room } from "colyseus.js";
-import { Schema } from "@colyseus/schema"
 import Phaser from "phaser";
-import { Cell, ITicTacToeState } from "../../types/ITicTacToeState";
+import { EventKeys } from "../../types/events";
+import { Cell, GameState, ITicTacToeState } from "../../types/ITicTacToeState";
 import { Message } from "../../types/messages";
 
 export default class Server
@@ -31,7 +31,7 @@ export default class Server
         })
 
         this.room.onStateChange.once(state => {
-            this.events.emit('once-state-changed', state)
+            this.events.emit(EventKeys.OnceStateChanged, state)
         })
 
         // checks for state changes and emit events
@@ -46,24 +46,29 @@ export default class Server
                         break; */
                     
                     case 'activePlayer':
-                        this.events.emit('player-turn-changed', value);
+                        this.events.emit(EventKeys.PlayerTurnChanged, value);
                         break;
                     
                     case 'winningPlayer':
-                        this.events.emit('player-win', value);
+                        this.events.emit(EventKeys.PlayerWin, value);
                         break;
+
+                    case 'gameState':
+                        this.events.emit(EventKeys.GameStateChanged, value);
+                        break;
+                    
                 }
             })
         }
 
         this.room.state.board.onChange = (item, idx) => {
-			this.events.emit('board-changed', item, idx)
+			this.events.emit(EventKeys.BoardChanged, item, idx)
 		}
     }
 
     onceStateChanged(cb: (state: ITicTacToeState) => void, context?: any)
 	{
-		this.events.once('once-state-changed', cb, context)
+		this.events.once(EventKeys.OnceStateChanged, cb, context)
 	}
 
     makeSelection(idx: number)
@@ -92,17 +97,22 @@ export default class Server
     // listen for board change or game state change
     onBoardChanged(cb: (cell: number, index: number) => void, context?: any)
 	{
-		this.events.on('board-changed', cb, context)
+		this.events.on(EventKeys.BoardChanged, cb, context)
 	}
 
     onPlayerChanged(cb: (playerNumber: number) => void, context?: any)
     {
-        this.events.on('player-turn-changed', cb, context)
+        this.events.on(EventKeys.PlayerTurnChanged, cb, context)
     }
 
     onPlayerWon(cb: (playerIndex: number) => void, context?: any)
 	{
-		this.events.on('player-win', cb, context)
+		this.events.on(EventKeys.PlayerWin, cb, context)
+	}
+
+    onGameStateChange(cb: (state: GameState) => void, context?: any)
+	{
+		this.events.on(EventKeys.GameStateChanged, cb, context)
 	}
 
     leave()
