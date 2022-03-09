@@ -1,8 +1,6 @@
-import { Schema, ArraySchema, SetSchema, CollectionSchema } from '@colyseus/schema'
+import { Schema, ArraySchema } from '@colyseus/schema'
 
-export type CardPattern = 'heart' | "dia" | "spade" | "club"
-
-export type CardSet = ICard[]
+export const CardPattern = ['heart', "dia", "spade", "club"]
 
 export enum GameState
 {
@@ -13,22 +11,22 @@ export enum GameState
 
 export interface ICard extends Schema
 {
-	pattern: CardPattern,
+	pattern: string,
 	points: number
 }
 
 export interface ICardSet extends Schema
 {
-	group: CollectionSchema
+	group: ArraySchema
 }
 
 export interface IPlayerState extends Schema
 {
 	id: string
 
-	hand: CollectionSchema
+	hand: ArraySchema
 
-	sets: CollectionSchema
+	sets: ArraySchema
 
 	score: number
 }
@@ -37,15 +35,15 @@ export interface ICardGameState extends Schema
 {	
 	gameState: number
 
-	common: CollectionSchema
+	common: ArraySchema
 
-	deck: CollectionSchema
+	deck: ArraySchema
+
+	players: ArraySchema
 
 	activePlayer: number
 
 	winningPlayer: number
-
-	players: ArraySchema
 }
 
 export default ICardGameState
