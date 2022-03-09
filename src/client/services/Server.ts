@@ -1,14 +1,14 @@
 import { Client, Room } from "colyseus.js";
 import Phaser from "phaser";
 import { EventKeys } from "../../types/events";
-import { Cell, GameState, ITicTacToeState } from "../../types/ITicTacToeState";
+import { GameState, ICardGameState } from "../../types/ICardGameState";
 import { Message } from "../../types/messages";
 
 export default class Server
 {
     private client: Client
     private events: Phaser.Events.EventEmitter
-    private room?: Room<ITicTacToeState>
+    private room?: Room<ICardGameState>
     private _playerIndex = -1
 
     get playerIndex()
@@ -34,7 +34,7 @@ export default class Server
 
     async join()
     {
-        this.room = await this.client.joinOrCreate<ITicTacToeState>('tic-tac-toe')
+        this.room = await this.client.joinOrCreate<ICardGameState>('tic-tac-toe')
         
         this.room.onMessage(Message.PlayerIndex, (message: { playerIndex: number}) => {
             this._playerIndex = message.playerIndex

@@ -1,6 +1,6 @@
 import { Command } from '@colyseus/command'
 import { Client } from 'colyseus'
-import { Cell, GameState, ITicTacToeState } from '../../types/ITicTacToeState'
+import { Cell, GameState, ITicTacToeState } from '../../types/ICardGameState'
 import CheckWinnerCommand from './CheckWinnerCommand'
 // import NextTurnCommand from './NextTurnCommand'
 
