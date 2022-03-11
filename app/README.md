@@ -1,11 +1,30 @@
-# Vue 3 + Typescript + Vite
+## See this template in action
+See it live at https://ubershmekel.github.io/vite-phaser-ts-starter/
 
-This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Get Started
+This is an example template. To try it out do the following:
 
-## Recommended IDE Setup
+1. Clone this repo
+1. Run `npm install`
+1. Run `npm run dev`
+1. You should see a URL where your game shows up
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+```
+{
+  "scripts": {
+    "dev": "vite", // start dev server
+    "build": "vite build", // build for production
+    "serve": "vite preview" // locally preview production build
+  }
+}
+```
 
-## Type Support For `.vue` Imports in TS
+Btw the live demo gets built by the github action at `.github/workflows/main.yml`. 
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's `.vue` type support plugin by running `Volar: Switch TS Plugin on/off` from VSCode command palette.
+## Why this tech stack
+
+I looked at quite a few web game frameworks. I settled on this setup because:
+
+* Phaser is the most prominent web game framework, with a lot of examples for pretty much every scenario.
+* Typescript lets me auto-complete everything and makes sure I avoid silly typo bugs.
+* Vite is much faster and simpler than Rollup and Webpack. I practically didn't have to do anything to get Phaser to work here, there's no complicated config file. The development-build-refresh cycle seems instant. It's fast enough that I never felt the need to measure it. Vite was built by evanw@ the person that built Vue.js.
