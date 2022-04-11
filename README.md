@@ -2,7 +2,7 @@
 
 A clone of the card mini game in the Voice of Cards: The Isle Dragon Roars.
 Mainly as a project game to find out how to design a card game using Colyseus and Phaser.
-Complier is Vite.
+This repo consists of both client and server.
 
 ## Tutorial-inspired by
 
